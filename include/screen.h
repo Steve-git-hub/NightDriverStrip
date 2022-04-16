@@ -106,12 +106,14 @@ class Screen
         auto yh = 0; 
         g_pDisplay->drawString(pszStatus, xh, yh);
     #elif USE_LCD
-        g_pDisplay->fillScreen(TFT_BLACK);
-        g_pDisplay->setFreeFont(FF15);
+        g_pDisplay->fillScreen(ILI9341_BLACK);
+        g_pDisplay->setFont();                      // select "Classic" fixed-width font
+        g_pDisplay->setTextSize(2);
         g_pDisplay->setTextColor(0xFBE0);
         auto xh = 10;
-        auto yh = 0; 
-        g_pDisplay->drawString(pszStatus, xh, yh);
+        auto yh = 0;
+        g_pDisplay->setCursor(xh, yh);
+        g_pDisplay->print(pszStatus);
     #endif
     }
 
@@ -130,6 +132,13 @@ class Screen
     {
         #if USE_OLED
             return 12;
+        #elif USE_LCD
+            int16_t x1;
+            int16_t y1;
+            uint16_t w;
+            uint16_t h;
+            g_pDisplay->getTextBounds("A", 0, 0, &x1, &y1, &w, &h);  // Get h = height of a character
+            return h + 6;                                            // Add 6 pixels to height for line spacing
         #elif USE_SCREEN
             return g_pDisplay->fontHeight();
         #else
@@ -141,6 +150,13 @@ class Screen
     {
         #if USE_OLED
             return g_pDisplay->getStrWidth(psz);
+        #elif USE_LCD
+            int16_t x1;
+            int16_t y1;
+            uint16_t w;
+            uint16_t h;
+            g_pDisplay->getTextBounds(psz, 0, 0, &x1, &y1, &w, &h);
+            return w;
         #elif USE_SCREEN
             return g_pDisplay->textWidth(psz);
         #else 
@@ -232,16 +248,20 @@ class Screen
             switch(size)
             {
                 case BIG:
-                    g_pDisplay->setFreeFont(FF17);
+                    g_pDisplay->setFont();
+                    g_pDisplay->setTextSize(4);
                     break;
                 case MEDIUM:
-                    g_pDisplay->setFreeFont(FF16);
+                    g_pDisplay->setFont();
+                    g_pDisplay->setTextSize(3);
                     break;
                 case TINY:
-                    g_pLCCD->setFreeFont(FF1);
+                    g_pDisplay->setFont();
+                    g_pDisplay->setTextSize(1);
                     break;                
                 default:
-                    g_pDisplay->setFreeFont(FF15);
+                    g_pDisplay->setFont();
+                    g_pDisplay->setTextSize(2);
                     break;
             }
         #endif

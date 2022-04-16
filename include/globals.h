@@ -340,7 +340,7 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define ENABLE_OTA              1   // Accept over the air flash updates
     #define WAIT_FOR_WIFI           0   // Don't *need* it so don't wait for it
 
-    #define LED_PIN0 5
+    #define LED_PIN0                4   // Wrover Kit uses Pin 5 as LCD backlight control so use 4 instead
 
     // The webserver serves files from its SPIFFS filesystem, such as index.html, and those files must be
     // uploaded to SPIFFS with the "Upload Filesystem Image" command before it can work.  When running
